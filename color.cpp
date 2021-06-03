@@ -1,6 +1,6 @@
 #include "color.h"
 
-constexpr RayTracing::color::type MAX = 255.999;
+constexpr RayTracing::color::ValType MAX = 255.999;
 
 void RayTracing::write_color(std::ostream& out, color pixel_color)
 {

@@ -12,87 +12,131 @@ constexpr int VEC_DIMENTION = 3;
 namespace RayTracing
 {
 
-	class vec3
+	class Vec3
 	{
 	public:
-		using type = double;
+		using ValType = double;
 
-		vec3() : e{ 0, 0, 0 } {};
-		vec3(type x, type y, type z) : e{ x, y, z } {};
+		Vec3() : e{ 0, 0, 0 } {};
+		Vec3(ValType x, ValType y, ValType z) : e{ x, y, z } {};
 
-		type x() { return e[0]; }
-		type y() { return e[1]; }
-		type z() { return e[2]; }
+		ValType x() { return e[0]; }
+		ValType y() { return e[1]; }
+		ValType z() { return e[2]; }
 
-		vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
-		type operator[](size_t i)
+		void set(ValType x, ValType y, ValType z)
+		{
+			e[0] = x;
+			e[1] = y;
+			e[2] = z;
+		}
+		Vec3 operator-() const { return Vec3(-e[0], -e[1], -e[2]); }
+		ValType operator[](size_t i)
 		{
 			assert(0 <= i && i < VEC_DIMENTION);
 			return e[i];
 		}
-		const type operator[](size_t i) const
+		const ValType operator[](size_t i) const
 		{
 			assert(0 <= i && i < VEC_DIMENTION);
 			return e[i];
 		}
 
-		inline vec3& operator+=(const vec3& v);
-		inline vec3& operator*=(const type t);
-		vec3& operator/=(const type t) { return *this *= 1 / t; }
+		inline Vec3& operator+=(const Vec3& v);
+		inline Vec3& operator*=(const ValType t);
+		Vec3& operator/=(const ValType t) { return *this *= 1 / t; }
 
-		vec3 operator+(const vec3& v)
+		void add(const Vec3& v, Vec3& out) const
 		{
-			return vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]);
+			out.set(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]);
 		}
-		vec3 operator-(const vec3& v)
+		Vec3 operator+(const Vec3& v) const
 		{
-			return vec3(e[0] - v.e[0], e[1] - v.e[1], e[2] - v.e[2]);
+			Vec3 ret;
+			add(v, ret);
+			return ret;
 		}
-		vec3 operator*(const vec3& v)
+		void subtract(const Vec3& v, Vec3& out) const
 		{
-			return vec3(e[0] * v.e[0], e[1] * v.e[1], e[2] * v.e[2]);
+			out.set(e[0] - v.e[0], e[1] - v.e[1], e[2] - v.e[2]);
 		}
-		vec3 operator*(type t)
+		Vec3 operator-(const Vec3& v) const
 		{
-			return vec3(t * e[0], t * e[1], t * e[2]);
+			Vec3 ret;
+			subtract(v, ret);
+			return ret;
 		}
-		vec3 operator/(type t)
+		void multiply(const Vec3& v, Vec3& out) const
 		{
-			return this->operator*(1 / t);
+			out.set(e[0] * v.e[0], e[1] * v.e[1], e[2] * v.e[2]);
+		}
+		Vec3 operator*(const Vec3& v) const
+		{
+			Vec3 ret;
+			multiply(v, ret);
+			return ret;
+		}
+		void multiply(ValType t, Vec3& out) const
+		{
+			out.set(t * e[0], t * e[1], t * e[2]);
+		}
+		Vec3 operator*(ValType t) const
+		{
+			Vec3 ret;
+			multiply(t, ret);
+			return ret;
+		}
+		void divide(ValType t, Vec3& out) const
+		{
+			multiply(1 / t, out);
+		}
+		Vec3 operator/(ValType t) const
+		{
+			return operator*(1 / t);
 		}
 
-		type dot(const vec3& v)
+		ValType dot(const Vec3& v) const
 		{
 			return e[0] * v.e[0] + e[1] * v.e[1] + e[2] * v.e[2];
 		}
-		vec3 cross(const vec3& v)
+		void cross(const Vec3& v, Vec3& out) const
 		{
-			return vec3(e[1] * v.e[2] - e[2] * v.e[1],
+			out.set(e[1] * v.e[2] - e[2] * v.e[1],
 				e[2] * v.e[0] - e[0] * v.e[2],
 				e[0] * v.e[1] - e[1] * v.e[0]);
 		}
-		vec3 unit()
+		Vec3 cross(const Vec3& v) const
 		{
-			return this->operator/(this->length());
+			Vec3 ret;
+			cross(v, ret);
+			return ret;
+		}
+		void unit(Vec3& out)
+		{
+			divide(length(), out);
+		}
+		Vec3 unit() const
+		{
+			return operator/(length());
 		}
 
-		type length() const
+		ValType length() const
 		{
 			return std::sqrt(length_squared());
 		}
-		type length_squared() const {
-			type x = e[0], y = e[1], z = e[2];
+		ValType length_squared() const {
+			ValType x = e[0], y = e[1], z = e[2];
 			return x * x + y * y + z * z;
 		}
 
 	private:
-		type e[VEC_DIMENTION];
+		ValType e[VEC_DIMENTION];
 	};
+	using Point3 = Vec3;   // 3D point
 
-	inline std::ostream& operator<<(std::ostream& out, const vec3& v);
-	inline vec3 operator*(vec3::type t, const vec3& v);
-
-	using point3 = vec3;   // 3D point
+	std::ostream& operator<<(std::ostream& out, const RayTracing::Vec3& v);
+	RayTracing::Vec3 operator*(RayTracing::Vec3::ValType t, const
+		RayTracing::Vec3& v);
 }
 
 #endif // !VEC_H
