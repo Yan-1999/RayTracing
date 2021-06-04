@@ -7,6 +7,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "../util.h"
+
 constexpr int VEC_DIMENTION = 3;
 
 namespace RayTracing
@@ -15,7 +17,6 @@ namespace RayTracing
 	class Vec3
 	{
 	public:
-		using ValType = double;
 
 		Vec3() : e{ 0, 0, 0 } {};
 		Vec3(ValType x, ValType y, ValType z) : e{ x, y, z } {};
@@ -42,8 +43,9 @@ namespace RayTracing
 			return e[i];
 		}
 
-		inline Vec3& operator+=(const Vec3& v);
-		inline Vec3& operator*=(const ValType t);
+		Vec3& operator+=(const Vec3& v);
+		Vec3& operator-=(const Vec3& v);
+		Vec3& operator*=(const ValType t);
 		Vec3& operator/=(const ValType t) { return *this *= 1 / t; }
 
 		void add(const Vec3& v, Vec3& out) const
@@ -135,7 +137,7 @@ namespace RayTracing
 	using Point3 = Vec3;   // 3D point
 
 	std::ostream& operator<<(std::ostream& out, const RayTracing::Vec3& v);
-	RayTracing::Vec3 operator*(RayTracing::Vec3::ValType t, const
+	RayTracing::Vec3 operator*(RayTracing::ValType t, const
 		RayTracing::Vec3& v);
 }
 

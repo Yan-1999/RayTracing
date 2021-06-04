@@ -18,36 +18,54 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="vec3.cpp">
+    <ClCompile Include="util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="color.cpp">
+    <ClCompile Include="ray\ray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ray.cpp">
+    <ClCompile Include="vec3\color.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="hit.cpp">
+    <ClCompile Include="vec3\vec3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="sphere.cpp">
+    <ClCompile Include="hit\hit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\hittable_list.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ray\camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vec3.h">
+    <ClInclude Include="util.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="color.h">
+    <ClInclude Include="ray\ray.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ray.h">
+    <ClInclude Include="vec3\color.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="hit.h">
+    <ClInclude Include="vec3\vec3.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="sphere.h">
+    <ClInclude Include="hit\hit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\hittable_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\sphere.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ray\camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

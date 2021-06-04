@@ -6,9 +6,9 @@
 
 namespace RayTracing
 {
-	using color = Vec3;
+	using Color = Vec3;
 
-	void write_color(std::ostream& out, color pixel_color);
+	void write_color(std::ostream& out, Color pixel_color);
 }
 
 #endif // !COLOR_H
