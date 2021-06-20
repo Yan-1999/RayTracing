@@ -42,6 +42,15 @@
     <ClCompile Include="ray\camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="material\material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="material\lambertian.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="material\metal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -66,6 +75,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ray\camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material\material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material\lambertian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material\metal.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

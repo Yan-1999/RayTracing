@@ -2,16 +2,21 @@
 
 #ifndef HIT_H
 
+
+#include <memory>
+
 #include "../ray/ray.h"
 #include "../vec3/vec3.h"
 
 namespace RayTracing
 {
+	class Material;
 
 	struct HitRecord
 	{
 		Point3 p_;
 		Vec3 normal_;
+		std::shared_ptr<Material> mat_ptr_;
 		ValType t_;
 		bool front_face_;
 

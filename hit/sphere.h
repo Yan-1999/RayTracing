@@ -11,7 +11,8 @@ namespace RayTracing
 	{
 	public:
 		Sphere() : center_(Point3()), radius_(0) {}
-		Sphere(Point3 center, ValType r) : center_(center), radius_(r)
+		Sphere(Point3 center, ValType r, std::shared_ptr<Material> m)
+			:center_(center), radius_(r), mat_ptr_(m)
 		{}
 
 		virtual bool hit(const Ray& r, ValType t_min, ValType t_max,
@@ -20,6 +21,7 @@ namespace RayTracing
 	private:
 		Point3 center_;
 		ValType radius_;
+		std::shared_ptr<Material> mat_ptr_;
 	};
 }
 

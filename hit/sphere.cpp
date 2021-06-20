@@ -34,6 +34,7 @@ bool RayTracing::Sphere::hit(const Ray& r, ValType t_min, ValType
 	Vec3 outward_normal = rec.p_ - center_;
 	outward_normal /= radius_;
 	rec.set_face_normal(r, outward_normal);
+	rec.mat_ptr_ = mat_ptr_;
 
 	return true;
 }

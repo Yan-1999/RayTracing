@@ -25,6 +25,11 @@ RayTracing::Vec3& RayTracing::Vec3::operator*=(const ValType t)
 	return *this;
 }
 
+RayTracing::Vec3 RayTracing::Vec3::reflect(const Vec3& n)
+{
+	return *this - 2 * dot(n) * n;
+}
+
 RayTracing::Vec3 RayTracing::Vec3::RandomInUnitSphere()
 {
 	Vec3 p = Vec3();

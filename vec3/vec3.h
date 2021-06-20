@@ -137,6 +137,13 @@ namespace RayTracing
 			ValType x = e[0], y = e[1], z = e[2];
 			return x * x + y * y + z * z;
 		}
+		bool near_zero() const
+		{
+			const auto s = 1e-8;
+			return (std::fabs(e[0]) < s) && (std::fabs(e[1]) < s) &&
+				(std::fabs(e[2]) < s);
+		}
+		Vec3 reflect(const Vec3& n);
 
 		static Vec3 random()
 		{

@@ -7,6 +7,9 @@
 #include "hit/sphere.h"
 #include "ray/camera.h"
 #include "ray/ray.h"
+#include "material/lambertian.h"
+#include "material/material.h"
+#include "material/metal.h"
 #include "util.h"
 
 
@@ -20,10 +23,11 @@ RayTracing::Color ray_color(const RayTracing::Ray& r,
 	}
 	if (world.hit(r, 0.001, RayTracing::infinity, rec))
 	{
-		RayTracing::Point3 target = rec.p_ + rec.normal_ +
-			RayTracing::Vec3::RandomUnitVector();
-		return 0.5 * ray_color(RayTracing::Ray(rec.p_, target - rec.p_), world,
-			depth - 1);
+		RayTracing::Ray scattered;
+		RayTracing::Color attenuation;
+		if (rec.mat_ptr_->scatter(r, rec, attenuation, scattered))
+			return attenuation * ray_color(scattered, world, depth - 1);
+		return RayTracing::Color(0, 0, 0);
 	}
 	RayTracing::Vec3 unit_direction = r.direction().unit();
 	auto t = 0.5 * (unit_direction.y() + 1.0);
@@ -42,8 +46,15 @@ int main()
 
 	// World
 	RayTracing::HittableList world;
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 0, -1), 0.5));
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -100.5, -1), 100));
+	auto material_ground = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.8, 0.8, 0.0));
+	auto material_center = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.7, 0.3, 0.3));
+	auto material_left = std::make_shared<RayTracing::Metal>(RayTracing::Color(0.8, 0.8, 0.8), 0.3);
+	auto material_right = std::make_shared<RayTracing::Metal>(RayTracing::Color(0.8, 0.6, 0.2), 1.0);
+
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0.0, 0.0, -1.0), 0.5, material_center));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
 	// Camera
 	RayTracing::Camera cam;

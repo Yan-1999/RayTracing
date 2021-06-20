@@ -147,6 +147,9 @@
     <ClCompile Include="hit\hittable_list.cpp" />
     <ClCompile Include="hit\sphere.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="material\lambertian.cpp" />
+    <ClCompile Include="material\material.cpp" />
+    <ClCompile Include="material\metal.cpp" />
     <ClCompile Include="ray\camera.cpp" />
     <ClCompile Include="ray\ray.cpp" />
     <ClCompile Include="util.cpp" />
@@ -157,6 +160,9 @@
     <ClInclude Include="hit\hit.h" />
     <ClInclude Include="hit\hittable_list.h" />
     <ClInclude Include="hit\sphere.h" />
+    <ClInclude Include="material\lambertian.h" />
+    <ClInclude Include="material\material.h" />
+    <ClInclude Include="material\metal.h" />
     <ClInclude Include="ray\camera.h" />
     <ClInclude Include="ray\ray.h" />
     <ClInclude Include="util.h" />
