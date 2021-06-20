@@ -5,6 +5,7 @@
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
 #include "hit/sphere.h"
+#include "ray/camera.h"
 #include "ray/ray.h"
 #include "util.h"
 
@@ -26,6 +27,7 @@ int main()
 	const auto aspect_ratio = 16.0 / 9.0;
 	const int image_width = 400;
 	const int image_height = static_cast<int>(image_width / aspect_ratio);
+	const int samples_per_pixel = 100;
 
 	// World
 	RayTracing::HittableList world;
@@ -33,6 +35,7 @@ int main()
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -100.5, -1), 100));
 
 	// Camera
+	RayTracing::Camera cam;
 
 	auto viewport_height = 2.0;
 	auto viewport_width = aspect_ratio * viewport_height;
@@ -51,11 +54,14 @@ int main()
 	for (int j = image_height - 1; j >= 0; --j) {
 		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
 		for (int i = 0; i < image_width; ++i) {
-			auto u = double(i) / (image_width - 1);
-			auto v = double(j) / (image_height - 1);
-			RayTracing::Ray r(origin_, lower_left_corner + u * horizontal_ + v * vertical - origin_);
-			RayTracing::Color pixel_color = ray_color(r, world);
-			RayTracing::write_color(fstr, pixel_color);
+			RayTracing::Color pixel_color(0, 0, 0);
+			for (int s = 0; s < samples_per_pixel; ++s) {
+				auto u = (i + RayTracing::random_double()) / (image_width - 1);
+				auto v = (j + RayTracing::random_double()) / (image_height - 1);
+				RayTracing::Ray r = cam.get_ray(u, v);
+				pixel_color += ray_color(r, world);
+			}
+			write_color(fstr, pixel_color, samples_per_pixel);
 		}
 	}
 

@@ -37,7 +37,7 @@ namespace RayTracing
 		return degrees * rad_per_deg;
 	}
 
-	inline ValType rand_uni()
+	inline ValType random_double()
 	{
 		static std::uniform_real_distribution<ValType> distribution(0.0, 1.0);
 		static std::ranlux24 generator;
