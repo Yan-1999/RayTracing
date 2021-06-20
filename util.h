@@ -16,7 +16,7 @@
 #ifdef USING_STD_NUMBER
 #include <numbers>
 #endif // USING_STD_NUMBER
-#include <random>
+#include <cstdlib>
 
 namespace RayTracing
 {
@@ -37,11 +37,9 @@ namespace RayTracing
 		return degrees * rad_per_deg;
 	}
 
-	inline ValType random_double()
+	inline ValType random_val(ValType min=0.0, ValType max=1.0)
 	{
-		static std::uniform_real_distribution<ValType> distribution(0.0, 1.0);
-		static std::ranlux24 generator;
-		return distribution(generator);
+		return min + (max - min) * std::rand() / (RAND_MAX + 1.0);
 	}
 }
 

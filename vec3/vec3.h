@@ -31,6 +31,12 @@ namespace RayTracing
 			e[1] = y;
 			e[2] = z;
 		}
+		void set_random(ValType min = 0.0, ValType max = 1.0)
+		{
+			e[0] = random_val(min, max);
+			e[1] = random_val(min, max);
+			e[2] = random_val(min, max);
+		}
 		Vec3 operator-() const { return Vec3(-e[0], -e[1], -e[2]); }
 		ValType operator[](size_t i)
 		{
@@ -126,9 +132,25 @@ namespace RayTracing
 		{
 			return std::sqrt(length_squared());
 		}
-		ValType length_squared() const {
+		ValType length_squared() const
+		{
 			ValType x = e[0], y = e[1], z = e[2];
 			return x * x + y * y + z * z;
+		}
+
+		static Vec3 random()
+		{
+			return Vec3(random_val(), random_val(), random_val());
+		}
+		static Vec3 random(double min, double max)
+		{
+			return Vec3(random_val(min, max), random_val(min, max),
+				random_val(min, max));
+		}
+		static Vec3 RandomInUnitSphere();
+		static Vec3 RandomUnitVector()
+		{
+			return RandomInUnitSphere().unit();
 		}
 
 	private:
