@@ -42,8 +42,8 @@ RayTracing::HittableList random_scene() {
 	auto ground_material = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.5, 0.5, 0.5));
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -1000, 0), 1000, ground_material));
 
-	for (int a = -3; a < 3; a++) {
-		for (int b = -3; b < 3; b++) {
+	for (int a = -11; a < 11; a++) {
+		for (int b = -11; b < 11; b++) {
 			auto choose_mat = RayTracing::random_val();
 			RayTracing::Point3 center(a + 0.9 * RayTracing::random_val(), 0.2, b + 0.9 * RayTracing::random_val());
 
