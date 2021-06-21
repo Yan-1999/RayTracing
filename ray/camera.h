@@ -18,7 +18,9 @@ namespace RayTracing
 			ValType vfov, // vertical field-of-view in degrees
 			ValType aspect_ratio,
 			ValType aperture,
-			ValType focus_dist
+			ValType focus_dist,
+			ValType time0,
+			ValType time1
 		)
 		{
 			auto theta = degrees_to_radians(vfov);
@@ -37,6 +39,8 @@ namespace RayTracing
 			lower_left_corner_ = origin_ - horizontal_ / 2 - vertical_ / 2 -
 				focus_dist * w_;
 			lens_radius_ = aperture / 2;
+			time0_ = time0;
+			time1_ = time1;
 		}
 
 		Ray get_ray(ValType s, ValType t) const
@@ -46,7 +50,8 @@ namespace RayTracing
 
 			return Ray(
 				origin_ + offset,
-				lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset
+				lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset,
+				random_val(time0_, time1_)
 			);
 		}
 
@@ -57,6 +62,7 @@ namespace RayTracing
 		Vec3 vertical_;
 		Vec3 u_, v_, w_;
 		ValType lens_radius_;
+		ValType time0_, time1_;
 	};
 }
 

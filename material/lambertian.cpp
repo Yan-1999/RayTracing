@@ -10,7 +10,7 @@ bool RayTracing::Lambertian::scatter(const Ray& r_in,
     {
         scatter_direction = rec.normal_;
     }
-    scattered = Ray(rec.p_, scatter_direction);
+    scattered = Ray(rec.p_, scatter_direction, r_in.time());
     attenuation = albedo_;
     return true;
 }

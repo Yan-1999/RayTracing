@@ -5,6 +5,7 @@
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
 #include "hit/sphere.h"
+#include "hit/moving_sphere.h"
 #include "ray/camera.h"
 #include "ray/ray.h"
 #include "material/dielectric.h"
@@ -39,47 +40,65 @@ RayTracing::Color ray_color(const RayTracing::Ray& r,
 RayTracing::HittableList random_scene() {
 	RayTracing::HittableList world;
 
-	auto ground_material = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.5, 0.5, 0.5));
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -1000, 0), 1000, ground_material));
+	auto ground_material = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(0.5, 0.5, 0.5));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -1000, 0),
+		1000, ground_material));
 
 	for (int a = -11; a < 11; a++) {
 		for (int b = -11; b < 11; b++) {
 			auto choose_mat = RayTracing::random_val();
-			RayTracing::Point3 center(a + 0.9 * RayTracing::random_val(), 0.2, b + 0.9 * RayTracing::random_val());
+			RayTracing::Point3 center(a + 0.9 * RayTracing::random_val(), 0.2,
+				b + 0.9 * RayTracing::random_val());
 
 			if ((center - RayTracing::Point3(4, 0.2, 0)).length() > 0.9) {
 				std::shared_ptr<RayTracing::Material> sphere_material;
 
 				if (choose_mat < 0.8) {
 					// diffuse
-					auto albedo = RayTracing::Color::random() * RayTracing::Color::random();
-					sphere_material = std::make_shared<RayTracing::Lambertian>(albedo);
-					world.add(std::make_shared<RayTracing::Sphere>(center, 0.2, sphere_material));
+					auto albedo = RayTracing::Color::random() *
+						RayTracing::Color::random();
+					sphere_material = std::make_shared<RayTracing::Lambertian>(
+						albedo);
+					world.add(std::make_shared<RayTracing::Sphere>(center, 0.2,
+						sphere_material));
+					auto center2 = center + RayTracing::Vec3(0,
+						RayTracing::random_val(0, .5), 0);
+					world.add(std::make_shared<RayTracing::MovingSphere>(
+						center, center2, 0.0, 1.0, 0.2, sphere_material));
 				}
 				else if (choose_mat < 0.95) {
 					// metal
 					auto albedo = RayTracing::Color::random(0.5, 1);
 					auto fuzz = RayTracing::random_val(0, 0.5);
-					sphere_material = std::make_shared<RayTracing::Metal>(albedo, fuzz);
-					world.add(std::make_shared<RayTracing::Sphere>(center, 0.2, sphere_material));
+					sphere_material = std::make_shared<RayTracing::Metal>(
+						albedo, fuzz);
+					world.add(std::make_shared<RayTracing::Sphere>(center, 0.2,
+						sphere_material));
 				}
 				else {
 					// glass
 					sphere_material = std::make_shared<RayTracing::Dielectric>(1.5);
-					world.add(std::make_shared<RayTracing::Sphere>(center, 0.2, sphere_material));
+					world.add(std::make_shared<RayTracing::Sphere>(center, 0.2,
+						sphere_material));
 				}
 			}
 		}
 	}
 
 	auto material1 = std::make_shared<RayTracing::Dielectric>(1.5);
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 1, 0), 1.0, material1));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 1, 0),
+		1.0, material1));
 
-	auto material2 = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.4, 0.2, 0.1));
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(-4, 1, 0), 1.0, material2));
+	auto material2 = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(
+		0.4, 0.2, 0.1));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(-4, 1, 0),
+		1.0, material2));
 
-	auto material3 = std::make_shared<RayTracing::Metal>(RayTracing::Color(0.7, 0.6, 0.5), 0.0);
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(4, 1, 0), 1.0, material3));
+	auto material3 = std::make_shared<RayTracing::Metal>(RayTracing::Color(0.7,
+		0.6, 0.5), 0.0);
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(4, 1, 0),
+		1.0, material3));
 
 	return world;
 }
@@ -87,10 +106,10 @@ RayTracing::HittableList random_scene() {
 int main()
 {
 	// Image
-	const auto aspect_ratio = 3.0 / 2.0;
-	const int image_width = 1200;
+	const auto aspect_ratio = 16.0 / 9.0;
+	const int image_width = 400;
 	const int image_height = static_cast<int>(image_width / aspect_ratio);
-	const int samples_per_pixel = 500;
+	const int samples_per_pixel = 100;
 	const int max_depth = 50;
 
 	// World
@@ -103,7 +122,8 @@ int main()
 	auto dist_to_focus = 10;
 	auto aperture = 0.1;
 
-	RayTracing::Camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
+	RayTracing::Camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture,
+		dist_to_focus, 0.0, 1.0);
 
 	auto viewport_height = 2.0;
 	auto viewport_width = aspect_ratio * viewport_height;
@@ -116,7 +136,8 @@ int main()
 		- RayTracing::Vec3(0, 0, focal_length);
 
 	// Render
-	std::fstream fstr("img.ppm", std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+	std::fstream fstr("img.ppm", std::ios_base::in | std::ios_base::out |
+		std::ios_base::trunc);
 	fstr << "P3\n" << image_width << " " << image_height << "\n255\n";
 
 	for (int j = image_height - 1; j >= 0; --j) {

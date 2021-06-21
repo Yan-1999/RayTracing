@@ -54,6 +54,12 @@
     <ClCompile Include="material\dielectric.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hit\moving_sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\aabb.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -90,6 +96,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="material\dielectric.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\moving_sphere.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\aabb.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

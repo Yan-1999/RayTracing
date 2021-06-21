@@ -1,12 +1,9 @@
-#include "sphere.h"
+#include "moving_sphere.h"
 
-#include <cmath>
-
-bool RayTracing::Sphere::hit(const Ray& r, ValType t_min, ValType
-	t_max, HitRecord& rec) const
+bool RayTracing::MovingSphere::hit(const Ray& r, ValType t_min, ValType t_max,
+	HitRecord& rec) const
 {
-	Vec3 oc = r.origin();
-	oc -= center_;
+	Vec3 oc = r.origin() - center(r.time());
 	auto a = r.direction().length_squared();
 	auto half_b = oc.dot(r.direction());
 	auto c = oc.length_squared() - radius_ * radius_;
@@ -31,8 +28,7 @@ bool RayTracing::Sphere::hit(const Ray& r, ValType t_min, ValType
 
 	rec.t_ = root;
 	r.at(rec.t_, rec.p_);
-	Vec3 outward_normal = rec.p_ - center_;
-	outward_normal /= radius_;
+	Vec3 outward_normal = (rec.p_ - center(r.time())) / radius_;
 	rec.set_face_normal(r, outward_normal);
 	rec.mat_ptr_ = mat_ptr_;
 

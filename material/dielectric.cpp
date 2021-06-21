@@ -23,6 +23,6 @@ bool RayTracing::Dielectric::scatter(const Ray& r_in,
     {
         direction = unit_direction.refract(rec.normal_, refraction_ratio);
     }
-    scattered = Ray(rec.p_, direction);
+    scattered = Ray(rec.p_, direction, r_in.time());
 	return true;
 }
