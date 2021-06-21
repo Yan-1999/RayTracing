@@ -59,7 +59,7 @@ int main()
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
 	// Camera
-	RayTracing::Camera cam;
+	RayTracing::Camera cam(RayTracing::Point3(-2, 2, 1), RayTracing::Point3(0, 0, -1), RayTracing::Vec3(0, 1, 0), 20, aspect_ratio);
 
 	auto viewport_height = 2.0;
 	auto viewport_width = aspect_ratio * viewport_height;

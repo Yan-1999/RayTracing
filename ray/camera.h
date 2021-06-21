@@ -11,40 +11,34 @@ namespace RayTracing
 	class Camera
 	{
 	public:
-		Camera()
+		Camera(
+			Point3 lookfrom,
+			Point3 lookat,
+			Vec3   vup,
+			ValType vfov, // vertical field-of-view in degrees
+			ValType aspect_ratio
+		)
 		{
-			auto aspect_ratio = 16.0 / 9.0;
-			auto viewport_height = 2.0;
+			auto theta = degrees_to_radians(vfov);
+			auto h = tan(theta / 2);
+			auto viewport_height = 2.0 * h;
 			auto viewport_width = aspect_ratio * viewport_height;
 			auto focal_length = 1.0;
 
-			Vec3 temp_vec(0, 0, focal_length);
+			auto w = (lookfrom - lookat).unit();
+			auto u = (vup.cross(w)).unit();
+			auto v = w.cross(u);
 
-			origin_ = Point3(0, 0, 0);
-			horizontal_ = Vec3(viewport_width, 0.0, 0.0);
-			vertical_ = Vec3(0.0, viewport_height, 0.0);
-			// lower_left_corner_ = origin_ - horizontal_ / 2 - vertical_ / 2
-			//     - Vec3(0, 0, focal_length);
-			lower_left_corner_ = origin_;
-			lower_left_corner_ -= temp_vec;
-			horizontal_.divide(2, temp_vec);
-			lower_left_corner_ -= temp_vec;
-			vertical_.divide(2, temp_vec);
-			lower_left_corner_ -= temp_vec;
+			origin_ = lookfrom;
+			horizontal_ = viewport_width * u;
+			vertical_ = viewport_height * v;
+			lower_left_corner_ = origin_ - horizontal_ / 2 - vertical_ / 2 - w;
 		}
 
-		Ray get_ray(ValType u, ValType v) const
+		Ray get_ray(ValType s, ValType t) const
 		{
-			Vec3 dir = lower_left_corner_;
-			// temp_vec = lower_left_corner_ + u * horizontal_ + v * vertical_
-			//     - origin_
-			Vec3 temp_vec = horizontal_ * u;
-			dir += temp_vec;
-			vertical_.multiply(v, temp_vec);
-			dir += temp_vec;
-			dir -= origin_;
-
-			return Ray(origin_, dir);
+			return Ray(origin_,
+				lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_);
 		}
 
 	private:
