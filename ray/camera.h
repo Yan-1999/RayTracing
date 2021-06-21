@@ -16,7 +16,9 @@ namespace RayTracing
 			Point3 lookat,
 			Vec3   vup,
 			ValType vfov, // vertical field-of-view in degrees
-			ValType aspect_ratio
+			ValType aspect_ratio,
+			ValType aperture,
+			ValType focus_dist
 		)
 		{
 			auto theta = degrees_to_radians(vfov);
@@ -25,20 +27,27 @@ namespace RayTracing
 			auto viewport_width = aspect_ratio * viewport_height;
 			auto focal_length = 1.0;
 
-			auto w = (lookfrom - lookat).unit();
-			auto u = (vup.cross(w)).unit();
-			auto v = w.cross(u);
+			w_ = (lookfrom - lookat).unit();
+			u_ = (vup.cross(w_)).unit();
+			v_ = w_.cross(u_);
 
 			origin_ = lookfrom;
-			horizontal_ = viewport_width * u;
-			vertical_ = viewport_height * v;
-			lower_left_corner_ = origin_ - horizontal_ / 2 - vertical_ / 2 - w;
+			horizontal_ = focus_dist * viewport_width * u_;
+			vertical_ = focus_dist * viewport_height * v_;
+			lower_left_corner_ = origin_ - horizontal_ / 2 - vertical_ / 2 -
+				focus_dist * w_;
+			lens_radius_ = aperture / 2;
 		}
 
 		Ray get_ray(ValType s, ValType t) const
 		{
-			return Ray(origin_,
-				lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_);
+			Vec3 rd = lens_radius_ * Vec3::RandomInUnitDisk();
+			Vec3 offset = u_ * rd.x() + v_ * rd.y();
+
+			return Ray(
+				origin_ + offset,
+				lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset
+			);
 		}
 
 	private:
@@ -46,6 +55,8 @@ namespace RayTracing
 		Point3 lower_left_corner_;
 		Vec3 horizontal_;
 		Vec3 vertical_;
+		Vec3 u_, v_, w_;
+		ValType lens_radius_;
 	};
 }
 

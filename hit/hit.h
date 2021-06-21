@@ -17,8 +17,8 @@ namespace RayTracing
 		Point3 p_;
 		Vec3 normal_;
 		std::shared_ptr<Material> mat_ptr_;
-		ValType t_;
-		bool front_face_;
+		ValType t_ = 0;
+		bool front_face_ = false;
 
 		inline void set_face_normal(const Ray& r, const Vec3& outward_normal) {
 			front_face_ = r.direction().dot(outward_normal) < 0;

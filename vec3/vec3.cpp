@@ -37,18 +37,6 @@ RayTracing::Vec3 RayTracing::Vec3::refract(const Vec3& n, ValType etai_over_etat
 	return r_out_perp + r_out_parallel;
 }
 
-RayTracing::Vec3 RayTracing::Vec3::RandomInUnitSphere()
-{
-	Vec3 p = Vec3();
-	while (true) {
-		p.set_random(-1, 1);
-		if (p.length_squared() < 1)
-		{
-			return p;
-		}
-	}
-}
-
 std::ostream& RayTracing::operator<<(std::ostream& out, const RayTracing::Vec3&
 	v)
 {

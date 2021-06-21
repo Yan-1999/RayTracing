@@ -155,10 +155,33 @@ namespace RayTracing
 			return Vec3(random_val(min, max), random_val(min, max),
 				random_val(min, max));
 		}
-		static Vec3 RandomInUnitSphere();
+		static Vec3 RandomInUnitSphere()
+		{
+			Vec3 p = Vec3();
+			while (true)
+			{
+				p.set_random(-1, 1);
+				if (p.length_squared() < 1)
+				{
+					return p;
+				}
+			}
+		}
 		static Vec3 RandomUnitVector()
 		{
 			return RandomInUnitSphere().unit();
+		}
+		static Vec3 RandomInUnitDisk()
+		{
+			Vec3 p;
+			while (true)
+			{
+				p.set(random_val(-1, 1), random_val(-1, 1), 0);
+				if (p.length_squared() < 1)
+				{
+					return p;
+				};
+			}
 		}
 
 	private:
