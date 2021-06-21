@@ -144,12 +144,13 @@ namespace RayTracing
 				(std::fabs(e[2]) < s);
 		}
 		Vec3 reflect(const Vec3& n);
+		Vec3 refract(const Vec3& n, ValType etai_over_etat);
 
 		static Vec3 random()
 		{
 			return Vec3(random_val(), random_val(), random_val());
 		}
-		static Vec3 random(double min, double max)
+		static Vec3 random(ValType min, ValType max)
 		{
 			return Vec3(random_val(min, max), random_val(min, max),
 				random_val(min, max));

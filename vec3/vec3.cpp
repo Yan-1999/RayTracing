@@ -30,6 +30,13 @@ RayTracing::Vec3 RayTracing::Vec3::reflect(const Vec3& n)
 	return *this - 2 * dot(n) * n;
 }
 
+RayTracing::Vec3 RayTracing::Vec3::refract(const Vec3& n, ValType etai_over_etat) {
+	auto cos_theta = fmin(operator-().dot(n), 1.0);
+	Vec3 r_out_perp = etai_over_etat * operator+(cos_theta * n);
+	Vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * n;
+	return r_out_perp + r_out_parallel;
+}
+
 RayTracing::Vec3 RayTracing::Vec3::RandomInUnitSphere()
 {
 	Vec3 p = Vec3();

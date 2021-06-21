@@ -7,6 +7,7 @@
 #include "hit/sphere.h"
 #include "ray/camera.h"
 #include "ray/ray.h"
+#include "material/dielectric.h"
 #include "material/lambertian.h"
 #include "material/material.h"
 #include "material/metal.h"
@@ -47,13 +48,14 @@ int main()
 	// World
 	RayTracing::HittableList world;
 	auto material_ground = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.8, 0.8, 0.0));
-	auto material_center = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.7, 0.3, 0.3));
-	auto material_left = std::make_shared<RayTracing::Metal>(RayTracing::Color(0.8, 0.8, 0.8), 0.3);
+	auto material_center = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(0.1, 0.2, 0.5));
+	auto material_left = std::make_shared<RayTracing::Dielectric>(1.5);
 	auto material_right = std::make_shared<RayTracing::Metal>(RayTracing::Color(0.8, 0.6, 0.2), 1.0);
 
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0.0, -100.5, -1.0), 100.0, material_ground));
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0.0, 0.0, -1.0), 0.5, material_center));
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(-1.0, 0.0, -1.0), -0.4, material_left));
 	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
 	// Camera
