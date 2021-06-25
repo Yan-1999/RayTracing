@@ -17,6 +17,11 @@ namespace RayTracing
 		virtual bool scatter(
 			const Ray& r_in, const HitRecord& rec, Color& attenuation, Ray& scattered
 		) const = 0;
+
+		virtual Color emitted(ValType u, ValType v, const Point3& p) const
+		{
+			return Color(0, 0, 0);
+		}
 	};
 }
 

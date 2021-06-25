@@ -81,6 +81,12 @@
     <ClCompile Include="texture\image_texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="material\diffuse_light.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\aarect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -144,6 +150,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="texture\image_texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material\diffuse_light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\aarect.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

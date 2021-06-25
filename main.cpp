@@ -4,11 +4,13 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+#include "hit/aarect.h"
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
 #include "hit/sphere.h"
 #include "hit/moving_sphere.h"
 #include "material/dielectric.h"
+#include "material/diffuse_light.h"
 #include "material/lambertian.h"
 #include "material/material.h"
 #include "material/metal.h"
@@ -23,21 +25,27 @@
 #include "vec3/vec3.h"
 
 RayTracing::Color ray_color(const RayTracing::Ray& r,
-	const RayTracing::Hittable& world, int depth)
+	const RayTracing::Color& background, const RayTracing::Hittable& world,
+	int depth)
 {
 	RayTracing::HitRecord rec;
 	if (depth <= 0)
 	{
 		return RayTracing::Color(0, 0, 0);
 	}
-	if (world.hit(r, 0.001, RayTracing::infinity, rec))
+	if (!world.hit(r, 0.001, RayTracing::infinity, rec))
 	{
-		RayTracing::Ray scattered;
-		RayTracing::Color attenuation;
-		if (rec.mat_ptr_->scatter(r, rec, attenuation, scattered))
-			return attenuation * ray_color(scattered, world, depth - 1);
-		return RayTracing::Color(0, 0, 0);
+		return background;
 	}
+	RayTracing::Ray scattered;
+	RayTracing::Color attenuation;
+	RayTracing::Color emited = rec.mat_ptr_->emitted(rec.u_, rec.v_, rec.p_);
+	if (!rec.mat_ptr_->scatter(r, rec, attenuation, scattered))
+	{
+		return emited;
+	}
+	return emited + attenuation * ray_color(scattered, background, world,
+		depth - 1);
 	RayTracing::Vec3 unit_direction = r.dir_.unit();
 	auto t = 0.5 * (unit_direction.y() + 1.0);
 	return (1.0 - t) * RayTracing::Color(1.0, 1.0, 1.0) + t *
@@ -149,6 +157,41 @@ RayTracing::HittableList earth()
 	return RayTracing::HittableList(globe);
 }
 
+RayTracing::HittableList simple_light() {
+	RayTracing::HittableList objects;
+
+	auto pertext = std::make_shared<RayTracing::NoiseTexture>(4);
+	objects.add(std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(0, -1000, 0), 1000,
+		std::make_shared<RayTracing::Lambertian>(pertext)));
+	objects.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 2, 0), 2,
+		make_shared<RayTracing::Lambertian>(pertext)));
+
+	auto difflight = std::make_shared<RayTracing::DiffuseLight>(
+		RayTracing::Color(4, 4, 4));
+	objects.add(make_shared<RayTracing::XYRect>(3, 5, 1, 3, -2, difflight));
+
+	return objects;
+}
+
+RayTracing::HittableList cornell_box() {
+	RayTracing::HittableList objects;
+
+	auto red = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(.65, .05, .05));
+	auto white = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(.73, .73, .73));
+	auto green = std::make_shared<RayTracing::Lambertian>(RayTracing::Color(.12, .45, .15));
+	auto light = std::make_shared<RayTracing::DiffuseLight>(RayTracing::Color(15, 15, 15));
+
+	objects.add(std::make_shared<RayTracing::YZRect>(0, 555, 0, 555, 555, green));
+	objects.add(std::make_shared<RayTracing::YZRect>(0, 555, 0, 555, 0, red));
+	objects.add(std::make_shared<RayTracing::XZRect>(213, 343, 227, 332, 554, light));
+	objects.add(std::make_shared<RayTracing::XZRect>(0, 555, 0, 555, 0, white));
+	objects.add(std::make_shared<RayTracing::XZRect>(0, 555, 0, 555, 555, white));
+	objects.add(std::make_shared<RayTracing::XYRect>(0, 555, 0, 555, 555, white));
+
+	return objects;
+}
+
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
 	cv::Mat& mat)
 {
@@ -163,18 +206,17 @@ void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel
 	b = std::sqrt(scale * b);
 
 	// Write the translated [0,255] value of each color component.
-	mat.at<cv::Vec3b>(j, i)[0] = static_cast<uchar>(256 * std::clamp(r, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[0] = static_cast<uchar>(256 * std::clamp(b, 0.0, 0.999));
 	mat.at<cv::Vec3b>(j, i)[1] = static_cast<uchar>(256 * std::clamp(g, 0.0, 0.999));
-	mat.at<cv::Vec3b>(j, i)[2] = static_cast<uchar>(256 * std::clamp(b, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[2] = static_cast<uchar>(256 * std::clamp(r, 0.0, 0.999));
 }
 
 int main()
 {
 	// Image
-	const auto aspect_ratio = 16.0 / 9.0;
-	const int image_width = 400;
-	const int image_height = static_cast<int>(image_width / aspect_ratio);
-	const int samples_per_pixel = 100;
+	auto aspect_ratio = 16.0 / 9.0;
+	int image_width = 400;
+	int samples_per_pixel = 100;
 	const int max_depth = 50;
 
 	// World
@@ -185,10 +227,12 @@ int main()
 	RayTracing::Point3 lookat;
 	auto vfov = 40.0;
 	auto aperture = 0.0;
+	RayTracing::Color background(0, 0, 0);
 
 	switch (0) {
 	case 1:
 		world = random_scene();
+		background = RayTracing::Color(0.70, 0.80, 1.00);
 		lookfrom = RayTracing::Point3(13, 2, 3);
 		lookat = RayTracing::Point3(0, 0, 0);
 		vfov = 20.0;
@@ -197,6 +241,7 @@ int main()
 
 	case 2:
 		world = two_spheres();
+		background = RayTracing::Color(0.70, 0.80, 1.00);
 		lookfrom = RayTracing::Point3(13, 2, 3);
 		lookat = RayTracing::Point3(0, 0, 0);
 		vfov = 20.0;
@@ -204,20 +249,43 @@ int main()
 
 	case 3:
 		world = two_perlin_spheres();
+		background = RayTracing::Color(0.70, 0.80, 1.00);
 		lookfrom = RayTracing::Point3(13, 2, 3);
 		lookat = RayTracing::Point3(0, 0, 0);
+		vfov = 20.0;
+		break;
+
+	case 4:
+		world = earth();
+		background = RayTracing::Color(0.70, 0.80, 1.00);
+		lookfrom = RayTracing::Point3(13, 2, 3);
+		lookat = RayTracing::Point3(0, 0, 0);
+		vfov = 20.0;
+		break;
+
+	case 5:
+		world = simple_light();
+		samples_per_pixel = 400;
+		background = RayTracing::Color(0, 0, 0);
+		lookfrom = RayTracing::Point3(26, 3, 6);
+		lookat = RayTracing::Point3(0, 2, 0);
 		vfov = 20.0;
 		break;
 
 	default:
-	case 4:
-		world = earth();
-		lookfrom = RayTracing::Point3(13, 2, 3);
-		lookat = RayTracing::Point3(0, 0, 0);
-		vfov = 20.0;
+	case 6:
+		world = cornell_box();
+		aspect_ratio = 1.0;
+		image_width = 600;
+		samples_per_pixel = 200;
+		background = RayTracing::Color(0, 0, 0);
+		lookfrom = RayTracing::Point3(278, 278, -800);
+		lookat = RayTracing::Point3(278, 278, 0);
+		vfov = 40.0;
 		break;
-
 	}
+
+	int image_height = static_cast<int>(image_width / aspect_ratio);
 
 	// Camera
 	//RayTracing::Point3 lookfrom(13, 2, 3);
@@ -252,7 +320,7 @@ int main()
 				auto u = (i + RayTracing::random_val()) / (image_width - 1);
 				auto v = (j + RayTracing::random_val()) / (image_height - 1);
 				RayTracing::Ray r = cam.get_ray(u, v);
-				pixel_color += ray_color(r, world, max_depth);
+				pixel_color += ray_color(r, background, world, max_depth);
 			}
 			write_color_to_mat(image_height - 1 - j, i, pixel_color, samples_per_pixel, img_mat);
 		}
