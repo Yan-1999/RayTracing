@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="hit\aabb.cpp" />
+    <ClCompile Include="hit\bvh.cpp" />
     <ClCompile Include="hit\hit.cpp" />
     <ClCompile Include="hit\hittable_list.cpp" />
     <ClCompile Include="hit\moving_sphere.cpp" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hit\aabb.h" />
+    <ClInclude Include="hit\bvh.h" />
     <ClInclude Include="hit\hit.h" />
     <ClInclude Include="hit\hittable_list.h" />
     <ClInclude Include="hit\moving_sphere.h" />

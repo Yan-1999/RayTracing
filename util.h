@@ -41,6 +41,11 @@ namespace RayTracing
 	{
 		return min + (max - min) * std::rand() / (RAND_MAX + 1.0);
 	}
+
+	inline int random_int(int min, int max)
+	{
+		return min + (max - min) * std::rand() / (RAND_MAX + 1);
+	}
 }
 
 #endif // !UTIL_H
