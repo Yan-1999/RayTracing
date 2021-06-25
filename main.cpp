@@ -108,6 +108,21 @@ RayTracing::HittableList random_scene() {
 	return world;
 }
 
+RayTracing::HittableList two_spheres() 
+{
+	RayTracing::HittableList objects;
+
+	auto checker = std::make_shared<RayTracing::CheckerTexture>(
+		RayTracing::Color(0.2, 0.3, 0.1), RayTracing::Color(0.9, 0.9, 0.9));
+
+	objects.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -10, 0), 10,
+		std::make_shared<RayTracing::Lambertian>(checker)));
+	objects.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 10, 0), 10,
+		std::make_shared<RayTracing::Lambertian>(checker)));
+
+	return objects;
+}
+
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
 	cv::Mat& mat)
 {
@@ -137,16 +152,40 @@ int main()
 	const int max_depth = 50;
 
 	// World
-	auto world = random_scene();
+
+	RayTracing::HittableList world;
+
+	RayTracing::Point3 lookfrom;
+	RayTracing::Point3 lookat;
+	auto vfov = 40.0;
+	auto aperture = 0.0;
+
+	switch (0) {
+	case 1:
+		world = random_scene();
+		lookfrom = RayTracing::Point3(13, 2, 3);
+		lookat = RayTracing::Point3(0, 0, 0);
+		vfov = 20.0;
+		aperture = 0.1;
+		break;
+
+	default:
+	case 2:
+		world = two_spheres();
+		lookfrom = RayTracing::Point3(13, 2, 3);
+		lookat = RayTracing::Point3(0, 0, 0);
+		vfov = 20.0;
+		break;
+	}
 
 	// Camera
-	RayTracing::Point3 lookfrom(13, 2, 3);
-	RayTracing::Point3 lookat(0, 0, 0);
+	//RayTracing::Point3 lookfrom(13, 2, 3);
+	//RayTracing::Point3 lookat(0, 0, 0);
 	RayTracing::Vec3 vup(0, 1, 0);
 	auto dist_to_focus = 10;
-	auto aperture = 0.1;
+	//auto aperture = 0.1;
 
-	RayTracing::Camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture,
+	RayTracing::Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture,
 		dist_to_focus, 0.0, 1.0);
 
 	auto viewport_height = 2.0;
