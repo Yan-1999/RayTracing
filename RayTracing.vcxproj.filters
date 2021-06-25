@@ -78,6 +78,9 @@
     <ClCompile Include="texture\noise_texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="texture\image_texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -138,6 +141,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="texture\noise_texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="texture\image_texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

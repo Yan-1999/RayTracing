@@ -15,8 +15,9 @@
 #include "ray/camera.h"
 #include "ray/ray.h"
 #include "texture/checker_texture.h"
-#include "texture/solid_color.h"
 #include "texture/noise_texture.h"
+#include "texture/solid_color.h"
+#include "texture/image_texture.h"
 #include "util.h"
 #include "vec3/color.h"
 #include "vec3/vec3.h"
@@ -109,7 +110,7 @@ RayTracing::HittableList random_scene() {
 	return world;
 }
 
-RayTracing::HittableList two_spheres() 
+RayTracing::HittableList two_spheres()
 {
 	RayTracing::HittableList objects;
 
@@ -124,18 +125,28 @@ RayTracing::HittableList two_spheres()
 	return objects;
 }
 
-RayTracing::HittableList two_perlin_spheres() 
+RayTracing::HittableList two_perlin_spheres()
 {
 	RayTracing::HittableList objects;
 
 	auto pertext = std::make_shared<RayTracing::NoiseTexture>(4);
 	objects.add(std::make_shared<RayTracing::Sphere>(
-		RayTracing::Point3(0, -1000, 0), 1000, 
+		RayTracing::Point3(0, -1000, 0), 1000,
 		std::make_shared<RayTracing::Lambertian>(pertext)));
 	objects.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 2, 0), 2,
 		make_shared<RayTracing::Lambertian>(pertext)));
 
 	return objects;
+}
+
+RayTracing::HittableList earth()
+{
+	auto earth_texture = std::make_shared<RayTracing::ImageTexture>("earthmap.jpg");
+	auto earth_surface = std::make_shared<RayTracing::Lambertian>(earth_texture);
+	auto globe = std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 0, 0),
+		2, earth_surface);
+
+	return RayTracing::HittableList(globe);
 }
 
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
@@ -191,13 +202,21 @@ int main()
 		vfov = 20.0;
 		break;
 
-	default:
 	case 3:
 		world = two_perlin_spheres();
 		lookfrom = RayTracing::Point3(13, 2, 3);
 		lookat = RayTracing::Point3(0, 0, 0);
 		vfov = 20.0;
 		break;
+
+	default:
+	case 4:
+		world = earth();
+		lookfrom = RayTracing::Point3(13, 2, 3);
+		lookat = RayTracing::Point3(0, 0, 0);
+		vfov = 20.0;
+		break;
+
 	}
 
 	// Camera

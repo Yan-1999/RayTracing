@@ -160,6 +160,7 @@
     <ClCompile Include="ray\camera.cpp" />
     <ClCompile Include="ray\ray.cpp" />
     <ClCompile Include="texture\checker_texture.cpp" />
+    <ClCompile Include="texture\image_texture.cpp" />
     <ClCompile Include="texture\noise_texture.cpp" />
     <ClCompile Include="texture\perlin.cpp" />
     <ClCompile Include="texture\solid_color.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="ray\camera.h" />
     <ClInclude Include="ray\ray.h" />
     <ClInclude Include="texture\checker_texture.h" />
+    <ClInclude Include="texture\image_texture.h" />
     <ClInclude Include="texture\noise_texture.h" />
     <ClInclude Include="texture\perlin.h" />
     <ClInclude Include="texture\solid_color.h" />
