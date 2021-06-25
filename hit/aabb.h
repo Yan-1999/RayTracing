@@ -16,7 +16,7 @@ public:
     Point3 min() const { return minimum_; }
     Point3 max() const { return maximum_; }
 
-    bool hit(const Ray& r, double t_min, double t_max) const;
+    bool hit(const Ray& r, ValType t_min, ValType t_max) const;
 
     static AABB surrounding_box(AABB box0, AABB box1);
 

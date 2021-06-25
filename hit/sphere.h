@@ -17,7 +17,10 @@ namespace RayTracing
 
 		virtual bool hit(const Ray& r, ValType t_min, ValType t_max,
 			HitRecord& rec) const override;
-		virtual bool bounding_box(double time0, double time1, AABB& output_box);
+		virtual bool bounding_box(ValType time0, ValType time1, AABB& output_box) const override;
+
+	private:
+		static void get_sphere_uv(const Point3& p, ValType& u, ValType& v);
 
 	private:
 		Point3 center_;

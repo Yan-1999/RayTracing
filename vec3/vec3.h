@@ -21,9 +21,9 @@ namespace RayTracing
 		Vec3() : e{ 0, 0, 0 } {};
 		Vec3(ValType x, ValType y, ValType z) : e{ x, y, z } {};
 
-		ValType x() { return e[0]; }
-		ValType y() { return e[1]; }
-		ValType z() { return e[2]; }
+		ValType x()const { return e[0]; }
+		ValType y()const { return e[1]; }
+		ValType z()const { return e[2]; }
 
 		void set(ValType x, ValType y, ValType z)
 		{

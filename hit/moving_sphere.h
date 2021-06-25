@@ -27,7 +27,7 @@ namespace RayTracing
 		virtual bool hit(
 			const Ray& r, ValType t_min, ValType t_max, HitRecord& rec) const override;
 		virtual bool bounding_box(
-			double time0, double time1, AABB& output_box) const override;
+			ValType time0, ValType time1, AABB& output_box) const override;
 
 	public:
 		Point3 center0_, center1_;

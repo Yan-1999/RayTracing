@@ -19,6 +19,8 @@ namespace RayTracing
 		Vec3 normal_;
 		std::shared_ptr<Material> mat_ptr_;
 		ValType t_ = 0;
+		ValType u_;
+		ValType v_;
 		bool front_face_ = false;
 
 		inline void set_face_normal(const Ray& r, const Vec3& outward_normal) {
@@ -32,7 +34,7 @@ namespace RayTracing
 	public:
 		virtual bool hit(const Ray& r, ValType t_min, ValType t_max, HitRecord& rec)
 			const = 0;
-		virtual bool bounding_box(double time0, double time1, AABB& output_box) const = 0;
+		virtual bool bounding_box(ValType time0, ValType time1, AABB& output_box) const = 0;
 	};
 
 }

@@ -20,7 +20,7 @@ bool RayTracing::HittableList::hit(const Ray& r, ValType t_min,
 	return hit_anything;
 }
 
-bool RayTracing::HittableList::bounding_box(double time0, double time1, AABB& output_box) const
+bool RayTracing::HittableList::bounding_box(ValType time0, ValType time1, AABB& output_box) const
 {
 	if (objects_.empty()) 
 	{ 

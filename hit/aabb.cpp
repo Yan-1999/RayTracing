@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-bool RayTracing::AABB::hit(const Ray& r, double t_min, double t_max) const
+bool RayTracing::AABB::hit(const Ray& r, ValType t_min, ValType t_max) const
 {
     for (int a = 0; a < 3; a++) {
         auto invD = 1.0f / r.direction()[a];

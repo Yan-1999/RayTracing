@@ -4,19 +4,21 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "vec3/color.h"
-#include "vec3/vec3.h"
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
 #include "hit/sphere.h"
 #include "hit/moving_sphere.h"
-#include "ray/camera.h"
-#include "ray/ray.h"
 #include "material/dielectric.h"
 #include "material/lambertian.h"
 #include "material/material.h"
 #include "material/metal.h"
+#include "ray/camera.h"
+#include "ray/ray.h"
+#include "texture/checker_texture.h"
+#include "texture/solid_color.h"
 #include "util.h"
+#include "vec3/color.h"
+#include "vec3/vec3.h"
 
 RayTracing::Color ray_color(const RayTracing::Ray& r,
 	const RayTracing::Hittable& world, int depth)
@@ -43,10 +45,10 @@ RayTracing::Color ray_color(const RayTracing::Ray& r,
 RayTracing::HittableList random_scene() {
 	RayTracing::HittableList world;
 
-	auto ground_material = std::make_shared<RayTracing::Lambertian>(
-		RayTracing::Color(0.5, 0.5, 0.5));
-	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -1000, 0),
-		1000, ground_material));
+	auto checker = std::make_shared<RayTracing::CheckerTexture>(
+		RayTracing::Color(0.2, 0.3, 0.1), RayTracing::Color(0.9, 0.9, 0.9));
+	world.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, -1000, 0), 1000,
+		std::make_shared<RayTracing::Lambertian>(checker)));
 
 	for (int a = -11; a < 11; a++) {
 		for (int b = -11; b < 11; b++) {
@@ -120,9 +122,9 @@ void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel
 	b = std::sqrt(scale * b);
 
 	// Write the translated [0,255] value of each color component.
-	mat.at<cv::Vec3b>(j, i)[0] = (256 * std::clamp(r, 0.0, 0.999));
-	mat.at<cv::Vec3b>(j, i)[1] = (256 * std::clamp(g, 0.0, 0.999));
-	mat.at<cv::Vec3b>(j, i)[2] = (256 * std::clamp(b, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[0] = static_cast<uchar>(256 * std::clamp(r, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[1] = static_cast<uchar>(256 * std::clamp(g, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[2] = static_cast<uchar>(256 * std::clamp(b, 0.0, 0.999));
 }
 
 int main()
@@ -172,11 +174,9 @@ int main()
 				RayTracing::Ray r = cam.get_ray(u, v);
 				pixel_color += ray_color(r, world, max_depth);
 			}
-			write_color_to_mat(j, i, pixel_color, samples_per_pixel, img_mat);
+			write_color_to_mat(image_height - 1 - j, i, pixel_color, samples_per_pixel, img_mat);
 		}
 	}
-
-
-
+	cv::imwrite("img.jpg", img_mat);
 	std::cerr << "\nDone.\n";
 }
