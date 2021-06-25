@@ -34,3 +34,15 @@ bool RayTracing::MovingSphere::hit(const Ray& r, ValType t_min, ValType t_max,
 
 	return true;
 }
+
+bool RayTracing::MovingSphere::bounding_box(double time0, double time1, AABB& output_box) const
+{
+	AABB box0(
+		center(time0) - Vec3(radius_, radius_, radius_),
+		center(time0) + Vec3(radius_, radius_, radius_));
+	AABB box1(
+		center(time1) - Vec3(radius_, radius_, radius_),
+		center(time1) + Vec3(radius_, radius_, radius_));
+	output_box = AABB::surrounding_box(box0, box1);
+	return true;
+}

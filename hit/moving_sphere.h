@@ -19,13 +19,15 @@ namespace RayTracing
 			mat_ptr_(m)
 		{};
 
-		virtual bool hit(
-			const Ray& r, ValType t_min, ValType t_max, HitRecord& rec) const override;
-
 		Point3 center(ValType time) const
 		{
 			return center0_ + ((time - time0_) / (time1_ - time0_)) * (center1_ - center0_);
 		}
+
+		virtual bool hit(
+			const Ray& r, ValType t_min, ValType t_max, HitRecord& rec) const override;
+		virtual bool bounding_box(
+			double time0, double time1, AABB& output_box) const override;
 
 	public:
 		Point3 center0_, center1_;

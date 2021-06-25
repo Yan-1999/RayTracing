@@ -25,6 +25,8 @@ namespace RayTracing
 
         virtual bool hit(const Ray& r, ValType t_min, ValType t_max,
             HitRecord& rec) const override;
+        virtual bool bounding_box(
+            double time0, double time1, AABB& output_box) const override;
 
     private:
         std::vector<std::shared_ptr<Hittable>> objects_;

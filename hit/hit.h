@@ -7,6 +7,7 @@
 
 #include "../ray/ray.h"
 #include "../vec3/vec3.h"
+#include "aabb.h"
 
 namespace RayTracing
 {
@@ -31,6 +32,7 @@ namespace RayTracing
 	public:
 		virtual bool hit(const Ray& r, ValType t_min, ValType t_max, HitRecord& rec)
 			const = 0;
+		virtual bool bounding_box(double time0, double time1, AABB& output_box) const = 0;
 	};
 
 }

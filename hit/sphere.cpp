@@ -38,3 +38,11 @@ bool RayTracing::Sphere::hit(const Ray& r, ValType t_min, ValType
 
 	return true;
 }
+
+bool RayTracing::Sphere::bounding_box(double time0, double time1, AABB& output_box)
+{
+	output_box = AABB(
+		center_ - Vec3(radius_, radius_, radius_),
+		center_ + Vec3(radius_, radius_, radius_));
+	return true;
+}
