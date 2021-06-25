@@ -72,6 +72,12 @@
     <ClCompile Include="texture\checker_texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="texture\perlin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="texture\noise_texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -126,6 +132,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="texture\checker_texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="texture\perlin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="texture\noise_texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

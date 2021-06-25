@@ -3,6 +3,8 @@
 #ifndef CHECKER_TEXTURE_H
 #define CHECKER_TEXTURE_H
 
+#include <cmath>
+
 #include "texture.h"
 #include "solid_color.h"
 
@@ -21,8 +23,8 @@ namespace RayTracing
             : even_(std::make_shared<SolidColor>(c1)), 
             odd_(std::make_shared<SolidColor>(c2)) {}
 
-        virtual Color value(double u, double v, const Point3& p) const override {
-            auto sines = sin(10 * p.x()) * sin(10 * p.y()) * sin(10 * p.z());
+        virtual Color value(ValType u, ValType v, const Point3& p) const override {
+            auto sines = std::sin(10 * p.x()) * std::sin(10 * p.y()) * std::sin(10 * p.z());
             if (sines < 0)
                 return odd_->value(u, v, p);
             else

@@ -16,6 +16,7 @@
 #include "ray/ray.h"
 #include "texture/checker_texture.h"
 #include "texture/solid_color.h"
+#include "texture/noise_texture.h"
 #include "util.h"
 #include "vec3/color.h"
 #include "vec3/vec3.h"
@@ -123,6 +124,20 @@ RayTracing::HittableList two_spheres()
 	return objects;
 }
 
+RayTracing::HittableList two_perlin_spheres() 
+{
+	RayTracing::HittableList objects;
+
+	auto pertext = std::make_shared<RayTracing::NoiseTexture>(4);
+	objects.add(std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(0, -1000, 0), 1000, 
+		std::make_shared<RayTracing::Lambertian>(pertext)));
+	objects.add(std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 2, 0), 2,
+		make_shared<RayTracing::Lambertian>(pertext)));
+
+	return objects;
+}
+
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
 	cv::Mat& mat)
 {
@@ -169,9 +184,16 @@ int main()
 		aperture = 0.1;
 		break;
 
-	default:
 	case 2:
 		world = two_spheres();
+		lookfrom = RayTracing::Point3(13, 2, 3);
+		lookat = RayTracing::Point3(0, 0, 0);
+		vfov = 20.0;
+		break;
+
+	default:
+	case 3:
+		world = two_perlin_spheres();
 		lookfrom = RayTracing::Point3(13, 2, 3);
 		lookat = RayTracing::Point3(0, 0, 0);
 		vfov = 20.0;
