@@ -1,4 +1,8 @@
+#include <atomic>
 #include <fstream>
+
+#include <opencv2/core/mat.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 #include "vec3/color.h"
 #include "vec3/vec3.h"
@@ -13,7 +17,6 @@
 #include "material/material.h"
 #include "material/metal.h"
 #include "util.h"
-
 
 RayTracing::Color ray_color(const RayTracing::Ray& r,
 	const RayTracing::Hittable& world, int depth)
@@ -103,6 +106,25 @@ RayTracing::HittableList random_scene() {
 	return world;
 }
 
+void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
+	cv::Mat& mat)
+{
+	auto r = c.x();
+	auto g = c.y();
+	auto b = c.z();
+
+	// Divide the color by the number of samples.
+	auto scale = 1.0 / samples_per_pixel;
+	r = std::sqrt(scale * r);
+	g = std::sqrt(scale * g);
+	b = std::sqrt(scale * b);
+
+	// Write the translated [0,255] value of each color component.
+	mat.at<cv::Vec3b>(j, i)[0] = (256 * std::clamp(r, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[1] = (256 * std::clamp(g, 0.0, 0.999));
+	mat.at<cv::Vec3b>(j, i)[2] = (256 * std::clamp(b, 0.0, 0.999));
+}
+
 int main()
 {
 	// Image
@@ -136,12 +158,12 @@ int main()
 		- RayTracing::Vec3(0, 0, focal_length);
 
 	// Render
-	std::fstream fstr("img.ppm", std::ios_base::in | std::ios_base::out |
-		std::ios_base::trunc);
-	fstr << "P3\n" << image_width << " " << image_height << "\n255\n";
-
+	cv::Mat img_mat(image_height, image_width, CV_8UC3);
+	std::atomic<int> remaining = image_height;
+#pragma omp parallel for num_threads(12)
 	for (int j = image_height - 1; j >= 0; --j) {
-		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+		remaining--;
+		std::cerr << "\rScanlines remaining: " << remaining << ' ' << std::flush;
 		for (int i = 0; i < image_width; ++i) {
 			RayTracing::Color pixel_color(0, 0, 0);
 			for (int s = 0; s < samples_per_pixel; ++s) {
@@ -150,9 +172,11 @@ int main()
 				RayTracing::Ray r = cam.get_ray(u, v);
 				pixel_color += ray_color(r, world, max_depth);
 			}
-			write_color(fstr, pixel_color, samples_per_pixel);
+			write_color_to_mat(j, i, pixel_color, samples_per_pixel, img_mat);
 		}
 	}
+
+
 
 	std::cerr << "\nDone.\n";
 }
