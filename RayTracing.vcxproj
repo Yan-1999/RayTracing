@@ -167,6 +167,7 @@
     <ClCompile Include="material\metal.cpp" />
     <ClCompile Include="ray\camera.cpp" />
     <ClCompile Include="ray\ray.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="texture\checker_texture.cpp" />
     <ClCompile Include="texture\image_texture.cpp" />
     <ClCompile Include="texture\noise_texture.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="material\metal.h" />
     <ClInclude Include="ray\camera.h" />
     <ClInclude Include="ray\ray.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="texture\checker_texture.h" />
     <ClInclude Include="texture\image_texture.h" />
     <ClInclude Include="texture\noise_texture.h" />
