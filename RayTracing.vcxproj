@@ -165,6 +165,7 @@
     <ClCompile Include="material\lambertian.cpp" />
     <ClCompile Include="material\material.cpp" />
     <ClCompile Include="material\metal.cpp" />
+    <ClCompile Include="predef.cpp" />
     <ClCompile Include="ray\camera.cpp" />
     <ClCompile Include="ray\ray.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="material\lambertian.h" />
     <ClInclude Include="material\material.h" />
     <ClInclude Include="material\metal.h" />
+    <ClInclude Include="predef.h" />
     <ClInclude Include="ray\camera.h" />
     <ClInclude Include="ray\ray.h" />
     <ClInclude Include="renderer.h" />

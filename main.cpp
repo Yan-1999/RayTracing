@@ -1,10 +1,12 @@
 #include <atomic>
 #include <fstream>
 
+#include <boost/json.hpp>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
 
 #include "vec3/color.h"
+#include "predef.h"
 #include "renderer.h"
 
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
