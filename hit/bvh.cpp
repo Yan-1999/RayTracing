@@ -1,6 +1,8 @@
+/*Using std::bind to bind axis with box_compare*/
 #include "bvh.h"
 
 #include <algorithm>
+#include <functional>
 
 bool RayTracing::box_compare(const std::shared_ptr<Hittable>& a,
 	const std::shared_ptr<Hittable>& b, size_t axis)
@@ -16,24 +18,6 @@ bool RayTracing::box_compare(const std::shared_ptr<Hittable>& a,
 	return box_a.min()[axis] < box_b.min()[axis];
 }
 
-bool RayTracing::box_x_compare(const std::shared_ptr<Hittable>& a,
-	const std::shared_ptr<Hittable>& b)
-{
-	return box_compare(a, b, 0);
-}
-
-bool RayTracing::box_y_compare(const std::shared_ptr<Hittable>& a,
-	const std::shared_ptr<Hittable>& b)
-{
-	return box_compare(a, b, 1);
-}
-
-bool RayTracing::box_z_compare(const std::shared_ptr<Hittable>& a,
-	const std::shared_ptr<Hittable>& b)
-{
-	return box_compare(a, b, 2);
-}
-
 RayTracing::BVHNode::BVHNode(
 	const std::vector<std::shared_ptr<Hittable>>& src_objects,
 	size_t start, size_t end, ValType time0, ValType time1)
@@ -42,9 +26,10 @@ RayTracing::BVHNode::BVHNode(
 	auto objects = src_objects;
 
 	int axis = random_int(0, 2);
-	auto comparator = (axis == 0) ? RayTracing::box_x_compare
-		: (axis == 1) ? RayTracing::box_y_compare
-		: RayTracing::box_z_compare;
+	auto comparator = std::bind(box_compare,
+		std::placeholders::_1,
+		std::placeholders::_2,
+		axis);
 
 	size_t object_span = end - start;
 

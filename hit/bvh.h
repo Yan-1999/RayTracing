@@ -41,13 +41,5 @@ public:
 
 bool box_compare(const std::shared_ptr<RayTracing::Hittable>& a,
     const std::shared_ptr<RayTracing::Hittable>& b, size_t axis);
-bool box_x_compare(const std::shared_ptr<RayTracing::Hittable>& a,
-    const std::shared_ptr<RayTracing::Hittable>& b);
-bool box_y_compare(const std::shared_ptr<RayTracing::Hittable>& a,
-    const std::shared_ptr<RayTracing::Hittable>& b);
-bool box_z_compare(const std::shared_ptr<RayTracing::Hittable>& a,
-    const std::shared_ptr<RayTracing::Hittable>& b);
-
-
 }
 #endif
