@@ -44,7 +44,7 @@ namespace RayTracing
 
 	inline int random_int(int min, int max)
 	{
-		return min + (max - min) * std::rand() / (RAND_MAX + 1);
+		return static_cast<int>(random_val(min, max + 1));
 	}
 }
 

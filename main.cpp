@@ -6,6 +6,7 @@
 
 #include "hit/aarect.h"
 #include "hit/box.h"
+#include "hit/bvh.h"
 #include "hit/constant_medium.h"
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
@@ -253,6 +254,93 @@ RayTracing::HittableList cornell_smoke()
 	return objects;
 }
 
+RayTracing::HittableList final_scene()
+{
+	RayTracing::HittableList boxes1;
+	auto ground = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(0.48, 0.83, 0.53));
+
+	const int boxes_per_side = 20;
+	for (int i = 0; i < boxes_per_side; i++) {
+		for (int j = 0; j < boxes_per_side; j++) {
+			auto w = 100.0;
+			auto x0 = -1000.0 + i * w;
+			auto z0 = -1000.0 + j * w;
+			auto y0 = 0.0;
+			auto x1 = x0 + w;
+			auto y1 = RayTracing::random_val(1, 101);
+			auto z1 = z0 + w;
+
+			boxes1.add(std::make_shared<RayTracing::Box>(
+				RayTracing::Point3(x0, y0, z0), RayTracing::Point3(x1, y1, z1),
+				ground));
+		}
+	}
+
+	RayTracing::HittableList objects;
+
+	objects.add(std::make_shared<RayTracing::BVHNode>(boxes1, 0, 1));
+
+	auto light = std::make_shared<RayTracing::DiffuseLight>(
+		RayTracing::Color(7, 7, 7));
+	objects.add(std::make_shared<RayTracing::XZRect>(123, 423, 147, 412, 554,
+		light));
+
+	auto center1 = RayTracing::Point3(400, 400, 200);
+	auto center2 = center1 + RayTracing::Vec3(30, 0, 0);
+	auto moving_sphere_material = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(0.7, 0.3, 0.1));
+	objects.add(std::make_shared<RayTracing::MovingSphere>(center1, center2,
+		0, 1, 50, moving_sphere_material));
+
+	objects.add(std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(260, 150, 45), 50,
+		std::make_shared<RayTracing::Dielectric>(1.5)));
+	objects.add(std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(0, 150, 145), 50,
+		std::make_shared<RayTracing::Metal>(RayTracing::Color(0.8, 0.8, 0.9),
+			1.0)
+		));
+
+	auto boundary = std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(360, 150, 145), 70,
+		std::make_shared<RayTracing::Dielectric>(1.5));
+	objects.add(boundary);
+	objects.add(std::make_shared<RayTracing::ConstantMedium>(boundary, 0.2, 
+		RayTracing::Color(0.2, 0.4, 0.9)));
+	boundary = std::make_shared<RayTracing::Sphere>(RayTracing::Point3(0, 0, 0), 
+		5000, std::make_shared<RayTracing::Dielectric>(1.5));
+	objects.add(std::make_shared<RayTracing::ConstantMedium>(boundary, .0001,
+		RayTracing::Color(1, 1, 1)));
+
+	auto emat = std::make_shared<RayTracing::Lambertian>(
+		std::make_shared<RayTracing::ImageTexture>("earthmap.jpg"));
+	objects.add(std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(400, 200, 400), 100, emat));
+	auto pertext = std::make_shared<RayTracing::NoiseTexture>(0.1);
+	objects.add(std::make_shared<RayTracing::Sphere>(
+		RayTracing::Point3(220, 280, 300), 80, 
+		std::make_shared<RayTracing::Lambertian>(pertext)));
+
+	RayTracing::HittableList boxes2;
+	auto white = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(.73, .73, .73));
+	int ns = 1000;
+	for (int j = 0; j < ns; j++) {
+		boxes2.add(std::make_shared<RayTracing::Sphere>(
+			RayTracing::Point3::random(0, 165), 10, white));
+	}
+
+	objects.add(std::make_shared<RayTracing::Translate>(
+		std::make_shared<RayTracing::RotateY>(
+			std::make_shared<RayTracing::BVHNode>(boxes2, 0.0, 1.0), 15),
+		RayTracing::Vec3(-100, 270, 395)
+		)
+	);
+
+	return objects;
+}
+
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
 	cv::Mat& mat)
 {
@@ -344,13 +432,24 @@ int main()
 		vfov = 40.0;
 		break;
 
-	default:
 	case 7:
 		world = cornell_smoke();
 		aspect_ratio = 1.0;
 		image_width = 600;
 		samples_per_pixel = 200;
 		lookfrom = RayTracing::Point3(278, 278, -800);
+		lookat = RayTracing::Point3(278, 278, 0);
+		vfov = 40.0;
+		break;
+
+	default:
+	case 8:
+		world = final_scene();
+		aspect_ratio = 1.0;
+		image_width = 800;
+		samples_per_pixel = 400;
+		background = RayTracing::Color(0, 0, 0);
+		lookfrom = RayTracing::Point3(478, 278, -600);
 		lookat = RayTracing::Point3(278, 278, 0);
 		vfov = 40.0;
 		break;

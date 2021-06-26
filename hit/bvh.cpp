@@ -39,7 +39,7 @@ RayTracing::BVHNode::BVHNode(
 	size_t start, size_t end, ValType time0, ValType time1)
 {
 	// Create a modifiable array of the source scene objects
-	std::vector<std::shared_ptr<Hittable>> objects(src_objects);
+	auto objects = src_objects;
 
 	int axis = random_int(0, 2);
 	auto comparator = (axis == 0) ? RayTracing::box_x_compare

@@ -50,6 +50,6 @@ RayTracing::Color RayTracing::ImageTexture::value(ValType u, ValType v,
 	const auto color_scale = 1.0 / 255.0;
 	cv::Vec3b pixel = data_.at<cv::Vec3b>(j, i);
 
-	return Color(color_scale * pixel[0], color_scale * pixel[1],
-		color_scale * pixel[2]);
+	return Color(color_scale * pixel[2], color_scale * pixel[1],
+		color_scale * pixel[0]);
 }

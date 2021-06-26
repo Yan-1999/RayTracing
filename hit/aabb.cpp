@@ -19,9 +19,9 @@ bool RayTracing::AABB::hit(const Ray& r, ValType t_min, ValType t_max) const
 }
 
 RayTracing::AABB RayTracing::AABB::surrounding_box(AABB box0, AABB box1) {
-    Point3 small(std::max(box0.min().x(), box1.min().x()),
-        std::max(box0.min().y(), box1.min().y()),
-        std::max(box0.min().z(), box1.min().z()));
+    Point3 small(std::min(box0.min().x(), box1.min().x()),
+        std::min(box0.min().y(), box1.min().y()),
+        std::min(box0.min().z(), box1.min().z()));
 
     Point3 big(std::max(box0.max().x(), box1.max().x()),
         std::max(box0.max().y(), box1.max().y()),
