@@ -5,9 +5,12 @@
 #include <opencv2/imgcodecs.hpp>
 
 #include "hit/aarect.h"
+#include "hit/box.h"
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
+#include "hit/rotate.h"
 #include "hit/sphere.h"
+#include "hit/translate.h"
 #include "hit/moving_sphere.h"
 #include "material/dielectric.h"
 #include "material/diffuse_light.h"
@@ -189,6 +192,21 @@ RayTracing::HittableList cornell_box() {
 	objects.add(std::make_shared<RayTracing::XZRect>(0, 555, 0, 555, 555, white));
 	objects.add(std::make_shared<RayTracing::XYRect>(0, 555, 0, 555, 555, white));
 
+	std::shared_ptr<RayTracing::Hittable> box1 =
+		std::make_shared<RayTracing::Box>(RayTracing::Point3(0, 0, 0),
+			RayTracing::Point3(165, 330, 165), white);
+	box1 = std::make_shared<RayTracing::RotateY>(box1, 15);
+	box1 = std::make_shared<RayTracing::Translate>(box1, RayTracing::Vec3(265, 0, 295));
+	objects.add(box1);
+
+	std::shared_ptr<RayTracing::Hittable> box2 =
+		std::make_shared<RayTracing::Box>(RayTracing::Point3(0, 0, 0),
+			RayTracing::Point3(165, 165, 165), white);
+	box2 = std::make_shared<RayTracing::RotateY>(box2, -18);
+	box2 = std::make_shared<RayTracing::Translate>(box2, RayTracing::Vec3(130, 0, 65));
+	objects.add(box2);
+
+
 	return objects;
 }
 
@@ -310,7 +328,7 @@ int main()
 	// Render
 	cv::Mat img_mat(image_height, image_width, CV_8UC3);
 	std::atomic<int> remaining = image_height;
-#pragma omp parallel for num_threads(12)
+#pragma omp parallel for
 	for (int j = image_height - 1; j >= 0; --j) {
 		remaining--;
 		std::cerr << "\rScanlines remaining: " << remaining << ' ' << std::flush;

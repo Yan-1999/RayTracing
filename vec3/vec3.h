@@ -38,7 +38,7 @@ namespace RayTracing
 			e[2] = random_val(min, max);
 		}
 		Vec3 operator-() const { return Vec3(-e[0], -e[1], -e[2]); }
-		ValType operator[](size_t i)
+		ValType& operator[](size_t i)
 		{
 			assert(0 <= i && i < VEC_DIMENTION);
 			return e[i];

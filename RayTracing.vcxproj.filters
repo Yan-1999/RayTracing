@@ -87,6 +87,18 @@
     <ClCompile Include="hit\aarect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hit\box.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\translate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\rotete.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hit\rotate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -156,6 +168,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="hit\aarect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\box.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\translate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\rotate.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

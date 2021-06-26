@@ -9,7 +9,7 @@ bool RayTracing::Dielectric::scatter(const Ray& r_in,
 	ValType refraction_ratio = rec.front_face_ ? (1.0 / ir_) : ir_;
 
 	Vec3 unit_direction = r_in.direction().unit();
-    ValType cos_theta = fmin(-unit_direction.dot(rec.normal_), 1.0);
+    ValType cos_theta = std::min(-unit_direction.dot(rec.normal_), 1.0);
     ValType sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 
     bool cannot_refract = refraction_ratio * sin_theta > 1.0;

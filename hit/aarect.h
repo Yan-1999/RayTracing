@@ -24,7 +24,7 @@ namespace RayTracing
 		virtual bool bounding_box(ValType time0, ValType time1,
 			AABB& output_box) const override
 		{
-			// The bounding box must have non-zero width in each dimension,
+			// The bounding Box must have non-zero width in each dimension,
 			// so pad the Z dimension a small amount.
 			output_box = AABB(Point3(x0_, y0_, k_ - 0.0001),
 				Point3(x1_, y1_, k_ + 0.0001));
@@ -50,7 +50,7 @@ namespace RayTracing
 		virtual bool bounding_box(ValType time0, ValType time1, AABB& output_box)
 			const override
 		{
-			// The bounding box must have non-zero width in each dimension, so pad the Y
+			// The bounding Box must have non-zero width in each dimension, so pad the Y
 			// dimension a small amount.
 			output_box = AABB(Point3(x0_, k_ - 0.0001, z0_), Point3(x1_, k_ + 0.0001, z1_));
 			return true;
@@ -75,7 +75,7 @@ namespace RayTracing
 		virtual bool bounding_box(ValType time0, ValType time1, AABB& output_box)
 			const override
 		{
-			// The bounding box must have non-zero width in each dimension, so pad the X
+			// The bounding Box must have non-zero width in each dimension, so pad the X
 			// dimension a small amount.
 			output_box = AABB(Point3(k_ - 0.0001, y0_, z0_), Point3(k_ + 0.0001, y1_, z1_));
 			return true;

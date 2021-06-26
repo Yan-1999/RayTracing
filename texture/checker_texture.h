@@ -23,8 +23,11 @@ namespace RayTracing
             : even_(std::make_shared<SolidColor>(c1)), 
             odd_(std::make_shared<SolidColor>(c2)) {}
 
-        virtual Color value(ValType u, ValType v, const Point3& p) const override {
-            auto sines = std::sin(10 * p.x()) * std::sin(10 * p.y()) * std::sin(10 * p.z());
+        virtual Color value(ValType u, ValType v, const Point3& p) 
+            const override 
+        {
+            auto sines = std::sin(10 * p.x()) * std::sin(10 * p.y()) 
+                * std::sin(10 * p.z());
             if (sines < 0)
                 return odd_->value(u, v, p);
             else
