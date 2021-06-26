@@ -203,5 +203,11 @@
     <ClInclude Include="predef.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="raytracing.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="custom.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

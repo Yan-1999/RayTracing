@@ -2,30 +2,7 @@
 
 #include <functional>
 
-#include "hit/aarect.h"
-#include "hit/box.h"
-#include "hit/bvh.h"
-#include "hit/constant_medium.h"
-#include "hit/hit.h"
-#include "hit/hittable_list.h"
-#include "hit/rotate.h"
-#include "hit/sphere.h"
-#include "hit/translate.h"
-#include "hit/moving_sphere.h"
-#include "material/dielectric.h"
-#include "material/diffuse_light.h"
-#include "material/lambertian.h"
-#include "material/material.h"
-#include "material/metal.h"
-#include "ray/camera.h"
-#include "ray/ray.h"
-#include "texture/checker_texture.h"
-#include "texture/noise_texture.h"
-#include "texture/solid_color.h"
-#include "texture/image_texture.h"
-#include "util.h"
-#include "vec3/color.h"
-#include "vec3/vec3.h"
+#include "raytracing.h"
 
 RayTracing::HittableList RayTracing::PredefinedWorld::random_scene() {
 	RayTracing::HittableList world;
@@ -309,6 +286,31 @@ RayTracing::HittableList RayTracing::PredefinedWorld::final_scene()
 	);
 
 	return objects;
+}
+
+RayTracing::HittableList RayTracing::PredefinedWorld::getPredefinedWorld(
+	size_t index)
+{
+	switch (index)
+	{
+	case 1:
+		return random_scene();
+	case 2: 
+		return two_spheres();
+	case 3: 
+		return two_perlin_spheres();
+	case 4:
+		return earth();
+	case 5:
+		return simple_light();
+	case 6:
+		return cornell_box();
+	case 7:
+		return cornell_smoke();
+	default:
+	case 8:
+		return final_scene();
+	}
 }
 
 RayTracing::Camera RayTracing::PredefinedCamera::getPredefinedCamera(size_t index)

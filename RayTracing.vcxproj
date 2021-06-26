@@ -197,7 +197,9 @@
     <ClInclude Include="material\lambertian.h" />
     <ClInclude Include="material\material.h" />
     <ClInclude Include="material\metal.h" />
+    <ClInclude Include="custom.h" />
     <ClInclude Include="predef.h" />
+    <ClInclude Include="raytracing.h" />
     <ClInclude Include="ray\camera.h" />
     <ClInclude Include="ray\ray.h" />
     <ClInclude Include="renderer.h" />

@@ -26,6 +26,7 @@ namespace RayTracing
 		HittableList cornell_smoke();
 
 		HittableList final_scene();
+		RayTracing::HittableList getPredefinedWorld(size_t index);
 	}
 
 	namespace PredefinedCamera
