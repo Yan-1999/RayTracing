@@ -150,6 +150,7 @@
     <ClCompile Include="hit\aarect.cpp" />
     <ClCompile Include="hit\box.cpp" />
     <ClCompile Include="hit\bvh.cpp" />
+    <ClCompile Include="hit\constant_medium.cpp" />
     <ClCompile Include="hit\hit.cpp" />
     <ClCompile Include="hit\hittable_list.cpp" />
     <ClCompile Include="hit\moving_sphere.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material\dielectric.cpp" />
     <ClCompile Include="material\diffuse_light.cpp" />
+    <ClCompile Include="material\isotropic.cpp" />
     <ClCompile Include="material\lambertian.cpp" />
     <ClCompile Include="material\material.cpp" />
     <ClCompile Include="material\metal.cpp" />
@@ -180,6 +182,7 @@
     <ClInclude Include="hit\aarect.h" />
     <ClInclude Include="hit\box.h" />
     <ClInclude Include="hit\bvh.h" />
+    <ClInclude Include="hit\constant_medium.h" />
     <ClInclude Include="hit\hit.h" />
     <ClInclude Include="hit\hittable_list.h" />
     <ClInclude Include="hit\moving_sphere.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="hit\translate.h" />
     <ClInclude Include="material\dielectric.h" />
     <ClInclude Include="material\diffuse_light.h" />
+    <ClInclude Include="material\isotropic.h" />
     <ClInclude Include="material\lambertian.h" />
     <ClInclude Include="material\material.h" />
     <ClInclude Include="material\metal.h" />

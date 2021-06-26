@@ -99,6 +99,12 @@
     <ClCompile Include="hit\rotate.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hit\constant_medium.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="material\isotropic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -177,6 +183,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="hit\rotate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hit\constant_medium.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material\isotropic.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

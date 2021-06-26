@@ -6,6 +6,7 @@
 
 #include "hit/aarect.h"
 #include "hit/box.h"
+#include "hit/constant_medium.h"
 #include "hit/hit.h"
 #include "hit/hittable_list.h"
 #include "hit/rotate.h"
@@ -210,6 +211,48 @@ RayTracing::HittableList cornell_box() {
 	return objects;
 }
 
+RayTracing::HittableList cornell_smoke()
+{
+	RayTracing::HittableList objects;
+
+	auto red = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(.65, .05, .05));
+	auto white = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(.73, .73, .73));
+	auto green = std::make_shared<RayTracing::Lambertian>(
+		RayTracing::Color(.12, .45, .15));
+	auto light = std::make_shared<RayTracing::DiffuseLight>(
+		RayTracing::Color(7, 7, 7));
+
+	objects.add(std::make_shared<RayTracing::YZRect>(0, 555, 0, 555, 555, green));
+	objects.add(std::make_shared<RayTracing::YZRect>(0, 555, 0, 555, 0, red));
+	objects.add(std::make_shared<RayTracing::XZRect>(113, 443, 127, 432, 554, light));
+	objects.add(std::make_shared<RayTracing::XZRect>(0, 555, 0, 555, 555, white));
+	objects.add(std::make_shared<RayTracing::XZRect>(0, 555, 0, 555, 0, white));
+	objects.add(std::make_shared<RayTracing::XYRect>(0, 555, 0, 555, 555, white));
+
+	std::shared_ptr<RayTracing::Hittable> box1 =
+		std::make_shared<RayTracing::Box>(RayTracing::Point3(0, 0, 0),
+			RayTracing::Point3(165, 330, 165), white);
+	box1 = std::make_shared<RayTracing::RotateY>(box1, 15);
+	box1 = std::make_shared<RayTracing::Translate>(box1,
+		RayTracing::Vec3(265, 0, 295));
+
+	std::shared_ptr<RayTracing::Hittable> box2 =
+		std::make_shared<RayTracing::Box>(RayTracing::Point3(0, 0, 0),
+			RayTracing::Point3(165, 165, 165), white);
+	box2 = std::make_shared<RayTracing::RotateY>(box2, -18);
+	box2 = std::make_shared<RayTracing::Translate>(box2,
+		RayTracing::Vec3(130, 0, 65));
+
+	objects.add(std::make_shared<RayTracing::ConstantMedium>(box1, 0.01,
+		RayTracing::Color(0, 0, 0)));
+	objects.add(std::make_shared<RayTracing::ConstantMedium>(box2, 0.01,
+		RayTracing::Color(1, 1, 1)));
+
+	return objects;
+}
+
 void write_color_to_mat(int j, int i, RayTracing::Color c, int samples_per_pixel,
 	cv::Mat& mat)
 {
@@ -290,13 +333,23 @@ int main()
 		vfov = 20.0;
 		break;
 
-	default:
 	case 6:
 		world = cornell_box();
 		aspect_ratio = 1.0;
 		image_width = 600;
 		samples_per_pixel = 200;
 		background = RayTracing::Color(0, 0, 0);
+		lookfrom = RayTracing::Point3(278, 278, -800);
+		lookat = RayTracing::Point3(278, 278, 0);
+		vfov = 40.0;
+		break;
+
+	default:
+	case 7:
+		world = cornell_smoke();
+		aspect_ratio = 1.0;
+		image_width = 600;
+		samples_per_pixel = 200;
 		lookfrom = RayTracing::Point3(278, 278, -800);
 		lookat = RayTracing::Point3(278, 278, 0);
 		vfov = 40.0;
