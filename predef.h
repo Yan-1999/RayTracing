@@ -33,7 +33,11 @@ namespace RayTracing
 	{
 		RayTracing::Camera getPredefinedCamera(size_t index);
 	}
+
+	namespace PredefinedBackground
+	{
+		RayTracing::Color getPredefinedBackground(size_t index);
+	}
 }
 
 #endif // ! PREDEF_H
-

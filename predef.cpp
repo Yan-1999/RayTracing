@@ -295,9 +295,9 @@ RayTracing::HittableList RayTracing::PredefinedWorld::getPredefinedWorld(
 	{
 	case 1:
 		return random_scene();
-	case 2: 
+	case 2:
 		return two_spheres();
-	case 3: 
+	case 3:
 		return two_perlin_spheres();
 	case 4:
 		return earth();
@@ -368,4 +368,19 @@ RayTracing::Camera RayTracing::PredefinedCamera::getPredefinedCamera(size_t inde
 	}
 	return RayTracing::Camera(lookfrom, lookat, vup, vfov, aspect_ratio, aperture,
 		dist_to_focus, 0.0, 1.0);
+}
+
+
+RayTracing::Color RayTracing::PredefinedBackground::getPredefinedBackground(size_t index)
+{
+
+	switch (index)
+	{
+	case 1: case 2: case 3: case 4:
+		return RayTracing::Color(0.70, 0.80, 1.00);
+
+	default:
+	case 5: case 6: case 7: case 8:
+		return RayTracing::Color(0, 0, 0);
+	}
 }

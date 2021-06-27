@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
 	{
 		world = RayTracing::PredefinedWorld::getPredefinedWorld(scene_index);
 		camera = RayTracing::PredefinedCamera::getPredefinedCamera(scene_index);
+		background = RayTracing::PredefinedBackground::getPredefinedBackground(scene_index);
 	}
 	RayTracing::Renderer renderer(world, camera, image_width,
 		samples_per_pixel,
